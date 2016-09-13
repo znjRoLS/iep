@@ -65,6 +65,20 @@ namespace iep_newer.Models
     public class RegisterViewModel
     {
         [Required]
+        [StringLength(50)]
+        [Display(Name = "Name")]
+        public string Name { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        [Display(Name = "LastName")]
+        public string LastName { get; set; }
+
+        [Required]
+        [Display(Name = "Tokens")]
+        public int Tokens { get; set; }
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }

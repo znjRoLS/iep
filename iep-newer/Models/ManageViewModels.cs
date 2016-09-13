@@ -7,6 +7,9 @@ namespace iep_newer.Models
 {
     public class IndexViewModel
     {
+        public string Name { get; set; }
+        public string LastName { get; set; }
+        public int Tokens { get; set; }
         public bool HasPassword { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }
         public string PhoneNumber { get; set; }

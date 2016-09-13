@@ -64,8 +64,12 @@ namespace iep_newer.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
+            var user = UserManager.FindById(userId);
             var model = new IndexViewModel
             {
+                Name = user.Name,
+                LastName = user.LastName,
+                Tokens = user.Tokens,
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
