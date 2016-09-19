@@ -6,31 +6,39 @@
 
 <h2>Index</h2>
 
-<p>
+@*<p>
     @Html.ActionLink("Create New", "Create")
-</p>
+</p>*@
 <table class="table">
     <tr>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.user.Name)
+        </th>*@
+
+        <th>
+            @*@Html.DisplayNameFor(model => model.created)*@
+            Created at
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.created)
+            @*@Html.DisplayNameFor(model => model.tokens)*@
+            Tokens
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.tokens)
+            @*@Html.DisplayNameFor(model => model.price)*@
+            Price
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.price)
+            @*@Html.DisplayNameFor(model => model.state)*@
+            Transaction state
         </th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.user.Name)
-        </td>
+        </td>*@
         <td>
             @Html.DisplayFor(modelItem => item.created)
         </td>
@@ -40,12 +48,56 @@
         <td>
             @Html.DisplayFor(modelItem => item.price)
         </td>
-        <td>
+        @if (item.state == iep_newer.Models.Order.OrderState.WAIT)
+        {
+            <td>
+                Still waiting for request to finish...
+            </td>
+        }
+        else if (item.state == iep_newer.Models.Order.OrderState.FAIL)
+        {
+            <td>
+                Transaction failed
+            </td>
+
+        }
+        else 
+        {
+            <td>
+                Transaction succeded!
+            </td>
+
+        }
+        @*<td>
             @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
             @Html.ActionLink("Details", "Details", new { id=item.id }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.id })
-        </td>
+        </td>*@
     </tr>
 }
 
 </table>
+
+@if (ViewBag.msg == "success")
+{
+    <script type="text/javascript">
+        $(function () {
+            $("tr").last().addClass("alert").addClass("alert-success");
+        })
+    </script>
+
+@*<div class="alert alert-success fade in">
+    <strong>Success!</strong> Indicates a successful or positive action.
+</div>*@
+}
+@if (ViewBag.msg == "fail")
+{
+    <script type="text/javascript">
+        $(function () {
+            $("tr").last().addClass("alert").addClass("alert-danger");
+        })
+    </script>
+@*<div class="alert alert-danger fade in">
+    <strong>Danger!</strong> Indicates a dangerous or potentially negative action.
+</div>*@
+}

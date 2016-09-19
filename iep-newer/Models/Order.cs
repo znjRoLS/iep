@@ -9,7 +9,7 @@ namespace iep_newer.Models
     [Table("Order")]
     public partial class Order
     {
-        public enum State { WAIT, FAIL, PASS}
+        public enum OrderState { WAIT, FAIL, PASS}
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -24,11 +24,12 @@ namespace iep_newer.Models
         [Required]
         [Column(TypeName = "datetime2")]
         public DateTime created { get; set; }
-
-        [Required]
+        
         public int tokens { get; set; }
+        
+        public float price { get; set; }
 
         [Required]
-        public float price { get; set; }
+        public OrderState state { get; set; }
     }
 }

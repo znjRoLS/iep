@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using iep_newer;
 using iep_newer.Models;
+using Microsoft.AspNet.Identity;
 
 namespace iep_newer.Controllers
 {
@@ -15,31 +16,115 @@ namespace iep_newer.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Auction
-        public ActionResult Index()
+        readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        private void updateAuctionClosed(ref Auction auction)
         {
-            return View(db.Auctions.ToList());
+            logger.Debug("Auction updateAuctionClosed for " + auction.name);
+            if (auction.closed < DateTime.Now)
+            {
+                if (auction.Bids.Count > 0)
+                {
+                    auction.state = Auction.State.SOLD;
+                }
+                else
+                {
+                    auction.state = Auction.State.EXPIRED;
+                }
+            }
         }
 
-        // GET: Auction/Details/5
-        public ActionResult Details(int? id)
+        // GET: Auction/Open
+        public HttpStatusCodeResult Open(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            logger.Debug("Auction Open " + id);
             Auction auction = db.Auctions.Find(id);
-            if (auction == null)
-            {
-                return HttpNotFound();
-            }
-            return View(auction);
+
+            auction.opened = DateTime.Now;
+            auction.state = Auction.State.OPEN;
+            auction.closed = DateTime.Now.AddSeconds(auction.duration);
+
+            db.SaveChanges();
+
+            return new HttpStatusCodeResult(200);
         }
+
+        // GET: Auction/Bid
+
+        public DateTime Bid(int id)
+        {
+            logger.Debug("Auction Bid " + id);
+            Bid bid = new Models.Bid();
+
+            var user = db.Users.Find(User.Identity.GetUserId());
+
+            if (user.Tokens == 0)
+            {
+                //return new HttpStatusCodeResult(400);
+                return DateTime.MinValue;
+            }
+
+            Auction auction = db.Auctions.Find(id);
+
+            updateAuctionClosed(ref auction);
+
+            if (auction.state != Auction.State.OPEN)
+            {
+                //return new HttpStatusCodeResult(400);
+                return DateTime.MinValue;
+            }
+
+            if (auction.closed - DateTime.Now < TimeSpan.FromSeconds(10))
+            {
+                auction.closed = DateTime.Now.AddSeconds(10);
+            }
+
+            bid.auction = auction;
+
+            //auction.Bids.Add(bid);
+            auction.last_bid_user = user;
+
+            bid.user = user;
+
+            bid.created = DateTime.Now;
+
+            bid.auction.current_price += 1;
+            bid.user.Tokens -= 1;
+
+            db.Bids.Add(bid);
+            db.SaveChanges();
+
+            //return new HttpStatusCodeResult(200);
+            return bid.created;
+        }
+
+
+        //// GET: Auction
+        //public ActionResult Index()
+        //{
+        //    return View(db.Auctions.ToList());
+        //}
+
+        //// GET: Auction/Details/5
+        //public ActionResult Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Auction auction = db.Auctions.Find(id);
+        //    if (auction == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(auction);
+        //}
 
         // GET: Auction/Create
         [Authorize(Roles = "admin")]
         public ActionResult Create()
         {
+            logger.Debug("Auction Create Get ");
             return View();
         }
 
@@ -51,8 +136,11 @@ namespace iep_newer.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult Create([Bind(Include = "name,duration,starting_price,image_file")] Auction auction)
         {
+            logger.Debug("Auction Create Post ");
             auction.created = DateTime.Now;
+            logger.Debug("Auction Create Post created " + auction.created);
             auction.current_price = auction.starting_price;
+            logger.Debug("Auction Create Post starting_price " + auction.starting_price);
             auction.image = new byte[auction.image_file.ContentLength];
             auction.image_file.InputStream.Read(auction.image, 0, auction.image.Length);
             auction.state = Auction.State.READY;
@@ -61,68 +149,68 @@ namespace iep_newer.Controllers
             {
                 db.Auctions.Add(auction);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
 
             return View(auction);
         }
 
-        // GET: Auction/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Auction auction = db.Auctions.Find(id);
-            if (auction == null)
-            {
-                return HttpNotFound();
-            }
-            return View(auction);
-        }
+        //// GET: Auction/Edit/5
+        //public ActionResult Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Auction auction = db.Auctions.Find(id);
+        //    if (auction == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(auction);
+        //}
 
-        // POST: Auction/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,name,duration,starting_price,created,opened,closed,state,image,current_price")] Auction auction)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(auction).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(auction);
-        }
+        //// POST: Auction/Edit/5
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit([Bind(Include = "id,name,duration,starting_price,created,opened,closed,state,image,current_price")] Auction auction)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Entry(auction).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View(auction);
+        //}
 
-        // GET: Auction/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Auction auction = db.Auctions.Find(id);
-            if (auction == null)
-            {
-                return HttpNotFound();
-            }
-            return View(auction);
-        }
+        //// GET: Auction/Delete/5
+        //public ActionResult Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Auction auction = db.Auctions.Find(id);
+        //    if (auction == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(auction);
+        //}
 
-        // POST: Auction/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Auction auction = db.Auctions.Find(id);
-            db.Auctions.Remove(auction);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        //// POST: Auction/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult DeleteConfirmed(int id)
+        //{
+        //    Auction auction = db.Auctions.Find(id);
+        //    db.Auctions.Remove(auction);
+        //    db.SaveChanges();
+        //    return RedirectToAction("Index");
+        //}
 
         protected override void Dispose(bool disposing)
         {

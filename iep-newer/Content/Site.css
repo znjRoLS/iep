@@ -23,8 +23,10 @@ textarea {
     max-width: 280px;
 }
 
-.navbar {
+/*.navbar {
     background-color:#44036F;
+}*/
+.navbar p {
 }
 
 
@@ -63,7 +65,22 @@ textarea {
 .portfolio-item {
     margin-bottom: 25px;
 }
+.portfolio-inside {
+    margin-left:25px;
+    margin-right:25px;
+    border: solid 1px #E4E4E4;
+    border-radius: 5px;
+    align-items : center;
+    background:rgba(255,255,255,0.4);
+    height:425px;
+}
 
 footer {
     margin: 50px 0;
+}
+
+.interaction-button {
+    font-size:20px; 
+    margin:auto; 
+    display:block;
 }

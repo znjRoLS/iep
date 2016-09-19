@@ -13,7 +13,7 @@ namespace iep_newer.Models
     [Table("Auction")]
     public partial class Auction
     {
-        public enum State { DRAFT, READY, OPEN, SOLD, EXPIRED };
+        public enum State { DRAFT, READY, OPEN, SOLD, EXPIRED, ALL };
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -47,6 +47,12 @@ namespace iep_newer.Models
         //[System.ComponentModel.DataAnnotations.Display(Name = "image")]
         public HttpPostedFileBase image_file { get; set; }
         public int current_price { get; set; }
-        //public virtual ICollection<Bid> Bids { get; set; }
+
+        [ForeignKey("last_bid_user")]
+        public string last_bid_user_id { get; set; }
+        
+        public virtual ApplicationUser last_bid_user { get; set; }
+
+        public virtual ICollection<Bid> Bids { get; set; }
     }
 }
