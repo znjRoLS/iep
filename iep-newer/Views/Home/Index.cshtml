@@ -16,6 +16,7 @@
                 </span>
             </div>
         </div>
+        <button type="button" class="btn btn-warning">See my Orders</button>
         <button @*data-toggle="collapse" data-target="#demo"*@ onclick="$('#demo').toggle();"  type="button" class="btn btn-primary" style="margin-left:350px; margin-top:10px; width:200px">Advanced search options</button>
 
         <div id="demo" hidden="hidden" >
@@ -173,7 +174,7 @@
                 {
                     <li>
                         @{
-                        Object args = new { search_terms = ViewBag.search_terms, search_state = ViewBag.search_state, min_price = ViewBag.min_price, max_price = ViewBag.max_price, page = pagenum };
+                        Object args = new { search_self = ViewBag.search_self, search_terms = ViewBag.search_terms, search_state = ViewBag.search_state, min_price = ViewBag.min_price, max_price = ViewBag.max_price, page = pagenum };
                         @Html.ActionLink(Convert.ToString(pagenum+1), "Index", args);
                     }
                     </li>

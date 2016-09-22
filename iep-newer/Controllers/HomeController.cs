@@ -17,9 +17,9 @@ namespace iep_newer.Controllers
         const int AUCTIONS_PER_PAGE = 12;
 
 
-        public ActionResult Index(string search_terms, int? min_price, int? max_price, Auction.State? search_state, int? page)
+        public ActionResult Index(string search_terms, int? min_price, int? max_price, Auction.State? search_state, string search_self, int? page)
         {
-            logger.Debug("Auction index");
+            logger.Debug("Auction index");     
 
             if (User.Identity.IsAuthenticated)
             {
@@ -65,7 +65,17 @@ namespace iep_newer.Controllers
                 });
             }
 
-            if (search_state != null && search_state != Auction.State.ALL)
+            if (search_self != null && search_self == "true")
+            {
+                auctions = auctions.Where(
+                    auction => auction.state == Auction.State.SOLD
+                    );
+                auctions = auctions.Where(
+                    auction => auction.last_bid_user_id == User.Identity.GetUserId()
+                    );
+            }
+
+            else if (search_state != null && search_state != Auction.State.ALL)
             {
                 logger.Debug("Auction index search state " + search_state);
                 auctions = auctions.Where(
@@ -95,6 +105,7 @@ namespace iep_newer.Controllers
             ViewBag.min_price = min_price;
             ViewBag.max_price = max_price;
             ViewBag.search_state = search_state;
+            ViewBag.search_self = search_self;
             ViewBag.pages = Math.Ceiling((double)auctions.Count() / AUCTIONS_PER_PAGE);
 
             logger.Debug("Auction index page " + page);

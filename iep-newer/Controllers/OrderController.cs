@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using iep_newer.Models;
 using Microsoft.AspNet.Identity;
+using System.Net.Mail;  
 
 namespace iep_newer.Controllers
 {
@@ -188,6 +189,37 @@ namespace iep_newer.Controllers
             }
 
             db.SaveChanges();
+
+            try
+            {
+                MailMessage mailMessage = new MailMessage();
+                mailMessage.To.Add(order.user.Email);
+                mailMessage.From = new MailAddress("support@komudo.com");
+                mailMessage.Subject = "Your token order";
+
+                string body = "Dear " + order.user.Name + ", your transaction ";
+                if (status == "success")
+                {
+                    body += "was successful!\n";
+                }
+                else
+                {
+                    body += "failed!\n";
+                }
+                body += "Tokens: " + order.tokens + "\n";
+                body += "Price: " + order.price + "\n";
+                body += "Cheers,\nKomudo team.";
+
+                mailMessage.Body = body;
+
+                SmtpClient smtpClient = new SmtpClient();
+                smtpClient.Send(mailMessage);
+                Response.Write("E-mail sent!");
+            }
+            catch (Exception ex)
+            {
+                Response.Write("Could not send the e-mail - error: " + ex.Message);
+            }
 
             return new HttpStatusCodeResult(200);
         }
