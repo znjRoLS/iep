@@ -327,6 +327,7 @@
     <Content Include="Vendor\trianglify\LICENSE" />
     <Content Include="Vendor\trianglify\package.json" />
     <Content Include="Vendor\trianglify\Readme.md" />
+    <Content Include="Views\Manage\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

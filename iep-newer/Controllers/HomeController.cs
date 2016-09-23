@@ -17,7 +17,7 @@ namespace iep_newer.Controllers
         const int AUCTIONS_PER_PAGE = 12;
 
 
-        public ActionResult Index(string search_terms, int? min_price, int? max_price, Auction.State? search_state, string search_self, int? page)
+        public ActionResult Index(string search_terms, int? min_price, int? max_price, Auction.State? search_state, bool? search_self, int? page)
         {
             logger.Debug("Auction index");     
 
@@ -65,7 +65,7 @@ namespace iep_newer.Controllers
                 });
             }
 
-            if (search_self != null && search_self == "true")
+            if (search_self != null && search_self == true)
             {
                 auctions = auctions.Where(
                     auction => auction.state == Auction.State.SOLD

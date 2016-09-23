@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using iep_newer.Models;
+using System.Net;
 
 namespace iep_newer.Controllers
 {
@@ -49,6 +50,28 @@ namespace iep_newer.Controllers
             {
                 _userManager = value;
             }
+        }
+
+
+        // GET: Manage/Edit
+        [Authorize]
+        public ActionResult Edit()
+        {
+            return View(User.Identity.GetApplicationUser());
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(string name, string lastname)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            ApplicationUser user = User.Identity.GetApplicationUser();
+            user.Name = name;
+            user.LastName = lastname;
+            db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+            return View(user);
         }
 
         //

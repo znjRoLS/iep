@@ -171,7 +171,7 @@ namespace iep_newer.Controllers
         //    return RedirectToAction("Index");
         //}
 
-        public HttpStatusCodeResult Result(int clientId, string status, int amount, double endUserPrice)
+        public string Result(int clientId, string status, int amount, double endUserPrice)
         {
             logger.Debug("Order Result clientId " + clientId + " status " + status + " amount " + amount + " endUserPrice " + endUserPrice);
             //Order order = db.Orders.Find(IDOrder);
@@ -219,9 +219,10 @@ namespace iep_newer.Controllers
             catch (Exception ex)
             {
                 Response.Write("Could not send the e-mail - error: " + ex.Message);
+                return ex.Message;
             }
 
-            return new HttpStatusCodeResult(200);
+            return "200";
         }
 
         protected override void Dispose(bool disposing)

@@ -16,7 +16,16 @@
                 </span>
             </div>
         </div>
-        <button type="button" class="btn btn-warning">See my Orders</button>
+        if (User.Identity.IsAuthenticated && !User.IsInRole("admin"))
+        {
+            @*<button type="button" class="btn btn-warning" style="margin-top:10px; margin-bottom:-45px;" >*@
+        
+            Object args = new { search_self = true, search_terms = ViewBag.search_terms, search_state = ViewBag.search_state, min_price = ViewBag.min_price, max_price = ViewBag.max_price, };
+            @Html.ActionLink("See my won auctions", "Index", args, new { @class = "btn btn-warning self-button" });
+        
+                //See my won auctions</button>
+
+            }
         <button @*data-toggle="collapse" data-target="#demo"*@ onclick="$('#demo').toggle();"  type="button" class="btn btn-primary" style="margin-left:350px; margin-top:10px; width:200px">Advanced search options</button>
 
         <div id="demo" hidden="hidden" >

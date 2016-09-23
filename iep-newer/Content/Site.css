@@ -75,6 +75,23 @@ textarea {
     height:425px;
 }
 
+.form-horizontal {
+    background:rgba(255,255,255,0.4);
+    border: solid 1px #E4E4E4;
+    border-radius: 5px;
+}
+
+.self-button {
+    margin-top:10px; 
+    margin-bottom:-45px;
+}
+
+.orderindexitem {
+    background:rgba(255, 216, 0, 0.4);
+    border: solid 1px #E4E4E4;
+    border-radius: 5px;
+}
+
 footer {
     margin: 50px 0;
 }

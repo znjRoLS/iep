@@ -4,7 +4,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Order history</h2>
 
 @*<p>
     @Html.ActionLink("Create New", "Create")
@@ -35,39 +35,41 @@
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
+    <tr onlclick="window.location.href ='/Order/Details/@item.id'">
         @*<td>
             @Html.DisplayFor(modelItem => item.user.Name)
         </td>*@
-        <td>
-            @Html.DisplayFor(modelItem => item.created)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.tokens)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.price)
-        </td>
-        @if (item.state == iep_newer.Models.Order.OrderState.WAIT)
-        {
-            <td>
-                Still waiting for request to finish...
+        @*<div class="orderindexitem" onclick="window.location.href='/Order/Details/@item.id'">*@
+            <td class="col-md-3">
+                @Html.DisplayFor(modelItem => item.created)
             </td>
-        }
-        else if (item.state == iep_newer.Models.Order.OrderState.FAIL)
-        {
-            <td>
-                Transaction failed
+            <td class="col-md-3">
+                @Html.DisplayFor(modelItem => item.tokens)
             </td>
+            <td class="col-md-3">
+                @Html.DisplayFor(modelItem => item.price)
+            </td>
+            @if (item.state == iep_newer.Models.Order.OrderState.WAIT)
+            {
+                <td class="col-md-3">
+                    Still waiting for request to finish...
+                </td>
+            }
+            else if (item.state == iep_newer.Models.Order.OrderState.FAIL)
+            {
+                <td class="col-md-3">
+                    Transaction failed
+                </td>
 
-        }
-        else 
-        {
-            <td>
-                Transaction succeded!
-            </td>
+            }
+            else
+            {
+                <td>
+                    Transaction succeded!
+                </td>
 
-        }
+            }
+        @*</div>*@
         @*<td>
             @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
             @Html.ActionLink("Details", "Details", new { id=item.id }) |
