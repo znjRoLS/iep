@@ -204,6 +204,10 @@ namespace iep_newer.Controllers
         // GET: Auction/Details/5
         public ActionResult Details(int? id)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewBag.UserName = db.Users.Find(User.Identity.GetUserId()).Name;
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

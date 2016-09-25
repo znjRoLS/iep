@@ -354,7 +354,9 @@
 
                 refreshTime(auction_item);
 
-                $(".table-bids tr").last().remove();
+                if ($(".table-bids tr").length == 9) {
+                    $(".table-bids tr").last().remove();
+                }
 
                 $('<tr><td><h4>' +
                   name +
