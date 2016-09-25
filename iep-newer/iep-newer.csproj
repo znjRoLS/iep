@@ -232,6 +232,10 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\close_window.png" />
+    <Content Include="Content\Komodo Dragon.PNG" />
+    <Content Include="Content\komodo-dragon-clip-art1-830x368.png" />
+    <Content Include="Content\Komodo-Dragon-PNG-HD.png" />
     <Content Include="Content\Thunder-T.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />

@@ -58,14 +58,24 @@ namespace iep_newer.Controllers
         //    return order.id;
         //}
 
+        const int ORDERS_PER_PAGE = 5;
+
         // GET: Order
-        public ActionResult Index(string msg)
+        [Authorize]
+        public ActionResult Index(string msg, int? pagenum)
         {
             logger.Debug("Order Index msg " + msg + " userid " + User.Identity.GetUserId());
             var thisUser = User.Identity.GetUserId();
-            var orders = db.Orders.Where(o => o.user_id == thisUser).Include(o => o.user);
+            IEnumerable<Order> orders = db.Orders;
+            orders = orders.Where(o => o.user_id == thisUser);//.Include(o => o.user);
+            orders = orders.OrderByDescending(o => o.created);
+
+            ViewBag.pages = Math.Ceiling((double)orders.Count() / ORDERS_PER_PAGE);
+
+            orders = orders.Skip(ORDERS_PER_PAGE * (pagenum ?? default(int))).Take(ORDERS_PER_PAGE);
 
             ViewBag.msg = msg;
+            ViewBag.pagenum = pagenum;
             return View(orders.ToList());
         }
 
@@ -145,20 +155,24 @@ namespace iep_newer.Controllers
         //    return View(order);
         //}
 
-        //// GET: Order/Delete/5
-        //public ActionResult Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Order order = db.Orders.Find(id);
-        //    if (order == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(order);
-        //}
+        // GET: Order/Delete/5
+        public ActionResult Delete(int? id, int? pagenum)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Order order = db.Orders.Find(id);
+            if (order == null)
+            {
+                return HttpNotFound();
+            }
+
+            db.Orders.Remove(order);
+            db.SaveChanges();
+
+            return RedirectToAction("Index", new { pagenum = pagenum });
+        }
 
         //// POST: Order/Delete/5
         //[HttpPost, ActionName("Delete")]

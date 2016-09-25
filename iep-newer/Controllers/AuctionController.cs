@@ -98,28 +98,6 @@ namespace iep_newer.Controllers
             return bid.created;
         }
 
-
-        //// GET: Auction
-        //public ActionResult Index()
-        //{
-        //    return View(db.Auctions.ToList());
-        //}
-
-        //// GET: Auction/Details/5
-        //public ActionResult Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Auction auction = db.Auctions.Find(id);
-        //    if (auction == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(auction);
-        //}
-
         // GET: Auction/Create
         [Authorize(Roles = "admin")]
         public ActionResult Create()
@@ -155,62 +133,73 @@ namespace iep_newer.Controllers
             return View(auction);
         }
 
-        //// GET: Auction/Edit/5
-        //public ActionResult Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Auction auction = db.Auctions.Find(id);
-        //    if (auction == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(auction);
-        //}
+        // GET: Auction/Edit/5
+        [Authorize(Roles = "admin")]
+        public ActionResult Edit(int? id)
+        {
+            logger.Debug("Auction Edit Get ");
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Auction auction = db.Auctions.Find(id);
+            if (auction == null)
+            {
+                return HttpNotFound();
+            }
+            return View(auction);
+        }
 
-        //// POST: Auction/Edit/5
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Include = "id,name,duration,starting_price,created,opened,closed,state,image,current_price")] Auction auction)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(auction).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(auction);
-        //}
+        // POST: Auction/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
+        public ActionResult Edit([Bind(Include = "id,name,duration,starting_price,image_file")] Auction auction)
+        {
+            Auction auctionDB = db.Auctions.Find(auction.id);
 
-        //// GET: Auction/Delete/5
-        //public ActionResult Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Auction auction = db.Auctions.Find(id);
-        //    if (auction == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(auction);
-        //}
+            auctionDB.name = auction.name;
+            auctionDB.duration = auction.duration;
+            logger.Debug("Auction Edit Post ");
+            auctionDB.created = DateTime.Now;
+            logger.Debug("Auction Edit Post created " + auction.created);
+            auctionDB.current_price = auctionDB.starting_price = auction.starting_price;
+            logger.Debug("Auction Edit Post starting_price " + auction.starting_price);
+            auctionDB.image_file = auction.image_file;
+            auctionDB.image = new byte[auctionDB.image_file.ContentLength];
+            auctionDB.image_file.InputStream.Read(auctionDB.image, 0, auctionDB.image.Length);
+            
+            if (ModelState.IsValid)
+            {
+                db.Entry(auctionDB).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
 
-        //// POST: Auction/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    Auction auction = db.Auctions.Find(id);
-        //    db.Auctions.Remove(auction);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
+            return View(auction);
+        }
+
+        // GET: Auction/Delete/5
+        [Authorize(Roles = "admin")]
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Auction auction = db.Auctions.Find(id);
+            if (auction == null)
+            {
+                return HttpNotFound();
+            }
+
+            db.Auctions.Remove(auction);
+            db.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
+        }
 
         protected override void Dispose(bool disposing)
         {
