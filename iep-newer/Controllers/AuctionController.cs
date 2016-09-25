@@ -201,6 +201,24 @@ namespace iep_newer.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        // GET: Auction/Details/5
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Auction auction = db.Auctions.Find(id);
+            if (auction == null)
+            {
+                return HttpNotFound();
+            }
+
+            ViewBag.closed = auction.closed;
+
+            return View(auction);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

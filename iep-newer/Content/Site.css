@@ -78,7 +78,6 @@ textarea {
 
 .self-button {
     margin-bottom:-45px;
-    margin-left:10px;
 }
 
 .orderindexitem {
@@ -195,3 +194,8 @@ footer {
     width:25px;
     height:25px;
 }
+
+td, th
+{
+    padding:0 15px 0 15px;
+}   

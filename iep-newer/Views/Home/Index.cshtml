@@ -61,11 +61,12 @@
         @foreach (var item in Model)
         {
             <div class="col-md-3 portfolio-item" id="auction-@item.id">
-                <div class="portfolio-inside" >
+                <div class="portfolio-inside" style="width:220px;" >
 
                     <!-- Auction item name -->
                     <div class="item-name-wrapper">
-                        @item.name
+                        @Html.ActionLink((string)item.name, "Details", "Auction", new { id = item.id }, null)
+                        @*<a href="">@item.name</a>*@
                     </div>
 
                     <!-- Auction main image -->
@@ -340,6 +341,7 @@
 
         //Keep last datetime of user bid, so when new one comes it should check if its newer
         var lastDateTime = new Date();
+        lastDateTime.setDate(lastDateTime.getDate() - 5);
 
         $(function () {
             // Declare a proxy to reference the hub.
@@ -351,6 +353,9 @@
                 msgs = message.split("#");
                 var currDateTime = new Date(msgs[1]);
                 var auction_id = msgs[0];
+
+                console.log("currDateTime " + currDateTime);
+                console.log("lastDateTime " + lastDateTime);
 
                 if (currDateTime < lastDateTime) {
                     return;
@@ -371,6 +376,7 @@
                             '</div>');
                 }
 
+                console.log("pa tu sam bre brate");
                 var current_price = parseInt(auction_item.find(".current-price").html());
                 auction_item.find(".current-price").html(current_price + 1);
 
@@ -394,9 +400,12 @@
                             return;
                         }
 
+                        console.log("lower token");
                         //Lower user tokens
                         var tokens = parseInt($(".token_count").html());
                         $(".token_count").html(tokens - 1);
+
+                        console.log("calling chat server");
 
                         chat.server.send(currentUserName, auction_id + "#" + result);
                     }

@@ -6,85 +6,394 @@
 
 <h2>Details</h2>
 
-<div>
-    <h4>Auction</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.name)
-        </dt>
+<div class="row">
+    <div class="col-md-offset-3 col-md-3 portfolio-item" id="auction-@Model.id">
+        <div class="portfolio-inside" style="width:220px;">
 
-        <dd>
-            @Html.DisplayFor(model => model.name)
-        </dd>
+            <!-- Auction item name -->
+            <div class="item-name-wrapper">
+                @Model.name
+            </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.duration)
-        </dt>
+            <!-- Auction main image -->
+            <div class="img-wrapper">
+                <a href="#">
+                    <span class="helper"></span>
+                    <img class="helper-img img-rounded img-responsive" src="data:image;base64,@System.Convert.ToBase64String(Model.image)" />
+                </a>
+            </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.duration)
-        </dd>
+            <!-- Auction time and button, depending on auction state -->
+            @if (Model.state == iep_newer.Models.Auction.State.SOLD)
+            {
 
-        <dt>
-            @Html.DisplayNameFor(model => model.starting_price)
-        </dt>
+                <div class="row time-text-wrapper">
+                    <h2 class="not-time-text">00:00:00</h2>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.starting_price)
-        </dd>
+                        <button class="btn btn-info interaction-button not-open-text" disabled="disabled">Sold!</button>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.created)
-        </dt>
+            }
+            else if (Model.state == iep_newer.Models.Auction.State.EXPIRED)
+            {
 
-        <dd>
-            @Html.DisplayFor(model => model.created)
-        </dd>
+                <div class="row time-text-wrapper">
+                    <h2 class="not-time-text">00:00:00</h2>
+                </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.opened)
-        </dt>
+                        <button class="btn btn-info interaction-button not-open-text" disabled="disabled">Expired!</button>
 
-        <dd>
-            @Html.DisplayFor(model => model.opened)
-        </dd>
+            }
+            else if (Model.state == iep_newer.Models.Auction.State.READY)
+            {
 
-        <dt>
-            @Html.DisplayNameFor(model => model.closed)
-        </dt>
+                <div class="row time-text-wrapper">
+                    <h2 class="not-time-text">--:--:--</h2>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.closed)
-        </dd>
+                        <button class="btn btn-info interaction-button not-open-text" disabled="disabled">Not yet open!</button>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.state)
-        </dt>
+            }
+            else if (Model.state == iep_newer.Models.Auction.State.OPEN)
+            {
 
-        <dd>
-            @Html.DisplayFor(model => model.state)
-        </dd>
+                <div class="row time-text-wrapper">
+                    <h2 class="time-text">@ViewBag.closed.Subtract(DateTime.Now).ToString(@"hh\:mm\:ss")</h2>
+                </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.image)
-        </dt>
+                if (User.Identity.IsAuthenticated && !User.IsInRole("admin"))
+                {
+                    <button class="btn btn-success interaction-button bid-button" onclick="bidAuction(@Model.id, this)">Bid!</button>
+                }
+                else
+                {
+                    <button class="btn btn-danger interaction-button bid-button" disabled="disabled" onclick="bidAuction(@Model.id, this)">Bid!</button>
+                }
 
-        <dd>
-            @Html.DisplayFor(model => model.image)
-        </dd>
+            }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.current_price)
-        </dt>
+            <!-- Auction price -->
+            <div class="row price-row">
+                <h3 class="current-price-text">Price:</h3>
+                <div class="current-price-wrapper">
+                    <h3 class="current-price">@Model.current_price</h3>
+                </div>
+                <img class="current-price-img" src="~/Content/Thunder-T.png">
+            </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.current_price)
-        </dd>
+            <!-- Show bidders if there's any, or show BE FIRST ONE for opened auction without bidders-->
+            @if (Model.Bids.Count > 0)
+            {
+                <div class="row last-bidder-wrapper">
+                    <h4 style="display:inline;">Last bidder: </h4>
+                    <h4 class="last-bidder">@Model.last_bid_user.Name</h4>
+                </div>
+            }
+            else if (Model.state == iep_newer.Models.Auction.State.OPEN)
+            {
+                <div class="row be_first_one" style="width:100%; margin-top:10px; margin-left:10px">
+                    <h4 class="be_first_one">Be the first one to bid!</h4>
+                </div>
+            }
 
-    </dl>
+            <!-- Show open auction and edit auction button for admin -->
+            @if (User.IsInRole("admin") && (Model.state == iep_newer.Models.Auction.State.READY))
+            {
+                <div class="row">
+                    <button class="btn btn-info col-md-offset-2 col-md-3" onclick="openAuction(@Model.id, this, @Model.duration)" style="font-size:14px;">Open!</button>
+                    @*<button class="btn btn-warning col-md-offset-2 col-md-3" onclick="openAuction(@item.id, this, @item.duration)" style="font-size:14px;">Edit</button>*@
+                    @Html.ActionLink("Edit", "Edit", "Auction", new { id = Model.id }, new { @class = "btn btn-warning col-md-offset-2 col-md-3", @style = "font-size:14px;" })
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="portfolio-inside">
+
+            <div class="item-name-wrapper" style="height:50px;">
+                Previous bids:
+            </div>
+
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th style="font-size:18px">Name</th>
+                        <th style="font-size:18px">Time</th>
+                    </tr>
+                </thead>
+                <tbody class="table-bids">
+                    @{var counter = 0; }
+                    @foreach (var bid in Model.Bids.OrderByDescending(bid => bid.created))
+                    {
+                        if (counter++ == 9) { break; }
+                        <tr>
+                            <td>
+                                <h4>
+                                    @bid.user.Name
+                                </h4>
+                            </td>
+                            <td>
+                                <h4>
+                                    @bid.created
+                                </h4>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        // Helper function for jquery selectors, $(".sth").exists()
+        $.fn.exists = function () {
+            return this.length !== 0;
+        }
+
+        // Set countdown for each time-text
+        $(function () {
+            $(".time-text").each(function () {
+                var that = this;
+
+                var timer = setInterval(function () {
+
+                    // Countdown should stop
+                    if (that.innerHTML == "00:00:00") {
+
+                        clearInterval(timer);
+
+                        var correct_button = $(that).parent().parent().find(".bid-button");
+
+                        correct_button.removeClass('btn-danger').removeClass('btn-success').addClass('btn-info');
+
+                        if (!correct_button.parent().find(".last-bidder").exists()) {
+                            correct_button.html("Expired");
+                            correct_button.parent().find(".be_first_one").hide();
+                        }
+                        else {
+                            correct_button.html("Sold!");
+                        }
+                    } else {
+                        var timeToSet = formatTime(getDuration(that.innerHTML) - 1);
+                        $(that).html(timeToSet);
+                    }
+                }, 1000)
+            })
+        });
+
+        // Helper functions for formating time for countdown
+        function formatTime(duration) {
+            var hours = parseInt(duration / 3600),
+            remainder = duration % 3600,
+            minutes = parseInt(remainder / 60),
+            seconds = remainder % 60;
+
+            var hoursStr = hours + "";
+            if (hours < 10) hoursStr = "0" + hoursStr;
+            var minutesStr = minutes + "";
+            if (minutes < 10) minutesStr = "0" + minutesStr;
+            var secondsStr = seconds + "";
+            if (seconds < 10) secondsStr = "0" + secondsStr;
+
+            return (hoursStr + ":"
+                    + minutesStr + ":"
+                    + secondsStr);
+        }
+
+        function getDuration(time) {
+            var arr = time.split(":");
+
+            var seconds = (+arr[0]) * 60 * 60 + (+arr[1]) * 60 + (+arr[2]);
+
+            return seconds;
+        }
+
+        // Function that is called by admin when he wants to open the auction
+        function openAuction(auction_id, button, duration) {
+            $.ajax({
+                url: "@Url.Action("Open", "Auction")?id=" + auction_id,
+                success: function (result) {
+                    console.log("Finished ajax auction open request! Result: " + result);
+
+                    var auction_item = $(button).parent().parent();
+
+                    $(button).parent().hide();
+                    auction_item.find(".not-open-text").hide();
+                    auction_item.find(".not-time-text").hide();
+
+                    //Append new time-text
+                    $('<div class="row time-text-wrapper">' +
+                        '<h2 class="time-text">' + formatTime(duration) + '</h2>' +
+                    '</div>')
+                        .insertBefore(
+                            auction_item.find(".price-row")
+                        );
+
+                    var time_text_div = auction_item.find(".time-text");
+
+                    //Set countdown for new timetext
+                    time_text_div.each(function () {
+                        var that = this;
+
+                        var timer = setInterval(function () {
+                            if (that.innerHTML == "00:00:00") {
+
+                                clearInterval(timer);
+
+                                var correct_button = $(time_text_div).parent().parent().find(".bid-button");
+
+                                correct_button.removeClass('btn-danger').removeClass('btn-success').addClass('btn-info');
+
+                                if (!$(button).parent().find(".last-bidder").exists()) {
+                                    correct_button.html("Expired");
+                                    correct_button.parent().find(".be_first_one").hide();
+                                }
+                                else {
+                                    correct_button.html("Sold!");
+                                }
+                            } else {
+                                var timeToSet = formatTime(getDuration(that.innerHTML) - 1);
+
+                                $(that).html(timeToSet);
+                            }
+                        }, 1000)
+                    });
+
+                    //Append new button
+                    $('<button class="btn btn-danger interaction-button bid-button" disabled="disabled" onclick="bidAuction(' + auction_id + ', this)">Bid!</button>'
+                        )
+                        .insertBefore(
+                            auction_item.find(".price-row")
+                        );
+
+                    //Append new be first one!
+                    auction_item.append(
+                        '<h4 class="be_first_one">Be the first one to bid!</h4>'
+                    )
+                },
+                async: true
+            });
+        }
+
+        //Keep current username, so when he bids, send it to server hub.
+        var currentUserName = "@ViewBag.UserName";
+
+        // Global function, so it's accessible, but its set when chatHub inits
+        var bidAuction;
+
+        //Raise time to 10 if its low
+        function refreshTime(portfolio_item) {
+            var time = portfolio_item.find(".time-text").html();
+
+            if (getDuration(time) < 10) {
+                portfolio_item.find(".time-text").html(formatTime(10));
+            }
+        }
+
+        //Keep last datetime of user bid, so when new one comes it should check if its newer
+        var lastDateTime = new Date();
+        lastDateTime.setDate(lastDateTime.getDate() - 5);
+
+        function formatListDate(datestr) {
+            var date = new Date(datestr);
+            
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var seconds = date.getSeconds();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+
+            return date.getMonth()+1 + "/" +
+                date.getDate() + "/" +
+                date.getFullYear() + " " +
+                strTime;
+
+        }
+
+        $(function () {
+            // Declare a proxy to reference the hub.
+            var chat = $.connection.chatHub;
+            // Create a function that the hub can call to broadcast messages.
+            chat.client.broadcastMessage = function (name, message) {
+
+                //name is username, message is auction_id#datetime_of_bid
+                msgs = message.split("#");
+                var currDateTime = new Date(msgs[1]);
+                var auction_id = msgs[0];
+
+                console.log("currDateTime " + currDateTime);
+                console.log("lastDateTime " + lastDateTime);
+
+                if (currDateTime < lastDateTime) {
+                    return;
+                }
+                lastDateTime = currDateTime;
+
+                var auction_item = $("#auction-" + auction_id);
+
+                if (auction_item.find(".last-bidder").exists()) {
+                    auction_item.find(".last-bidder").html(name);
+                }
+                else {
+                    auction_item.find(".be_first_one").hide();
+                    auction_item.find(".portfolio-inside").append(
+                        '<div class="row last-bidder-wrapper">' +
+                                '<h4 style="display:inline;">Last bidder: </h4>' +
+                                '<h4 class="last-bidder">' + name + '</h4>' +
+                            '</div>');
+                }
+
+                console.log("pa tu sam bre brate");
+                var current_price = parseInt(auction_item.find(".current-price").html());
+                auction_item.find(".current-price").html(current_price + 1);
+
+                refreshTime(auction_item);
+
+                $(".table-bids tr").last().remove();
+
+                $('<tr><td><h4>' +
+                  name +
+                  '</h4></td><td><h4>' +
+                  formatListDate(currDateTime) +
+                  '</h4></td></tr>')
+                    .prependTo('.table-bids').hide().fadeIn(1000);
+            };
+
+            $.connection.hub.start().done(function () {});
+
+            //Set bidauction here so its connected to chathub
+            bidAuction = function (auction_id, button) {
+                $.ajax({
+                    url: "@Url.Action("Bid", "Auction")?id=" + auction_id,
+                    success: function (result) {
+
+                        //A bit hardcoded, but sentinel value (if bid is not created) is minimum datetime, so if request doesn't last for a day, this works good :)
+                        var d = new Date();
+                        d.setDate(d.getDate() - 1);
+                        if (new Date(result) < d) {
+                            $("#auction-" + auction_id).find(".interaction-button").html("Buy more tokens!");
+                            $("#auction-" + auction_id).find(".interaction-button").attr("disabled", true);
+                            return;
+                        }
+
+                        console.log("lower token");
+                        //Lower user tokens
+                        var tokens = parseInt($(".token_count").html());
+                        $(".token_count").html(tokens - 1);
+
+                        console.log("calling chat server");
+
+                        chat.server.send(currentUserName, auction_id + "#" + result);
+                    }
+                });
+            }
+        });
+
+
+    </script>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
