@@ -60,22 +60,27 @@
                 <div class="portfolio-inside" >
 
                     <div style="height: 60px; margin-top:0px; margin:auto; text-align:center">
-                        <h3><b>@item.name</b></h3>
+                        <h3><b style="font-family: 'Trebuchet MS', Helvetica, serif">@item.name</b></h3>
                     </div>
-                    <a href="#">
-                        <img class="img-rounded img-responsive" style="margin:auto;" width="180px" height="180px" src="data:image;base64,@System.Convert.ToBase64String(item.image)" />
-                    </a>
+                    <div style="width:218px; height:180px; overflow:hidden">
+                        <a href="#">
+                            <span class="helper" ></span>
+                            <img class="helper-img img-rounded img-responsive" width="180px" height="180px" src="data:image;base64,@System.Convert.ToBase64String(item.image)" />
+                        </a>
+                    </div>
                     
 
                     @if (item.state == iep_newer.Models.Auction.State.SOLD)
                 {
-                        <div class="row" style="margin:auto; width:100%">
+                        <div class="row time-text-wrapper">
                             <h2 style="display:block; margin:auto; text-align:center;" class="not-time-text">00:00:00</h2>
                         </div>
                         <button class="btn btn-info interaction-button not-open-text" disabled="disabled">Sold!</button>
                         <div class="row price-row" style="margin:auto; width:100%; margin-top:10px">
                             <h3 style="text-align:left; display:inline; margin-left:10px">Price:</h3>
-                            <h3 class="current_price " style="text-align:right; margin-left:50px; display:inline"><b>@item.current_price</b></h3>
+                            <div style="width:100px;">
+                                <h3 class="current_price " style="text-align:right; margin-left:50px; display:inline; font-weight:bold;">@item.current_price</h3>
+                            </div>
                             <img src="~/Content/Thunder-T.png" width="38px" height="31px" style="float:right; display:inline">
                         </div>
                         if (item.Bids.Count > 0)
@@ -89,31 +94,33 @@
                     }
                     else if (item.state == iep_newer.Models.Auction.State.EXPIRED)
                     {
-                        <div class="row" style="margin:auto; width:100%">
+                        <div class="row time-text-wrapper">
                             <h2 style="display:block; margin:auto; text-align:center;" class="not-time-text">00:00:00</h2>
                         </div>
                         <button class="btn btn-info interaction-button not-open-text" disabled="disabled">Expired!</button>
                         <div class="row price-row" style="margin:auto; width:100%; margin-top:10px">
                             <h3 style="text-align:left; display:inline; margin-left:10px">Price:</h3>
-                            <h3 class="current_price " style="text-align:right; margin-left:50px; display:inline"><b>@item.current_price</b></h3>
+                            <div style="width:80px; display:inline-block; text-align:right; ">
+                                <h3 class="current_price " style="display:inline; font-weight:bold;">@item.current_price</h3>
+                            </div>
                             <img src="~/Content/Thunder-T.png" width="38px" height="31px" style="float:right; display:inline">
                         </div>
                     }
                     else if (item.state == iep_newer.Models.Auction.State.READY)
                     {
-                        <div class="row" style="margin:auto; width:100%">
+                        <div class="row time-text-wrapper">
                             <h2 style="display:block; margin:auto; text-align:center;" class="not-time-text">--:--:--</h2>
                         </div>
                         <button class="btn btn-info interaction-button not-open-text" disabled="disabled">Not yet open!</button>
                         <div class="row price-row" style="margin:auto; width:100%; margin-top:10px">
                             <h3 style="text-align:left; display:inline; margin-left:10px">Price:</h3>
-                            <h3 class="current_price " style="text-align:right; margin-left:50px; display:inline"><b>@item.current_price</b></h3>
+                            <h3 class="current_price " style="text-align:right; margin-left:50px; display:inline; font-weight:bold;">@item.current_price</h3>
                             <img src="~/Content/Thunder-T.png" width="38px" height="31px" style="float:right; display:inline">
                         </div>
                     }
                     else if (item.state == iep_newer.Models.Auction.State.OPEN)
                     {
-                        <div class="row" style="margin:auto; width:100%">
+                        <div class="row time-text-wrapper">
                             @*<h4 style="display:inline;">Tim: </h4>*@
                             <h2 style="display:block; margin:auto; text-align:center;" class="time-text">@item.closed.Subtract(DateTime.Now).ToString(@"hh\:mm\:ss")</h2>
                         </div>
@@ -143,7 +150,7 @@
 
                         <div class="row price-row" style="margin:auto; width:100%; margin-top:10px">
                             <h3 style="text-align:left; display:inline; margin-left:10px">Price:</h3>
-                            <b><h3 class="current_price" style="text-align:right; margin-left:50px; display:inline">@item.current_price</h3></b>
+                            <h3 class="current_price" style="text-align:right; margin-left:50px; display:inline; font-weight:bold;">@item.current_price</h3>
                             <img src="~/Content/Thunder-T.png" width="38px" height="31px" style="float:right; display:inline">
                         </div>
 
@@ -163,7 +170,7 @@
 
                     @if (User.IsInRole("admin") && (item.state == iep_newer.Models.Auction.State.READY))
                 {
-                        <button class="btn btn-info interaction-button" onclick="openAuction(@item.id, this, @item.duration)">Open this auction!</button>
+                        <button class="btn btn-info interaction-button" onclick="openAuction(@item.id, this, @item.duration)" style="font-size:14px;">Open this auction!</button>
                     }
                 </div>
             </div>
@@ -221,14 +228,19 @@
 
                 var timer = setInterval(function () {
 
-                    var timeToSet = formatTime(getDuration(that.innerHTML) - 1);
+                 
 
-                    $(that).html(timeToSet);
-                    if (timeToSet == "00:00:00") {
+                    if (that.innerHTML == "00:00:00") {
 
                         clearInterval(timer);
 
-                        var correct_button = $(that).parent().find(".bid-button")
+                        var correct_button = $(that).parent().parent().find(".bid-button")
+
+                        console.log("udjooo!");
+                        console.log("correct: ");
+                        console.log(correct_button);
+                        console.log("parent: ");
+                        console.log($(that).parent().parent());
 
                         correct_button.removeClass('btn-danger').removeClass('btn-success').addClass('btn-info');
 
@@ -240,7 +252,14 @@
                             correct_button.html("Sold!");
                         }
 
+                        return;
+
                     }
+
+                    var timeToSet = formatTime(getDuration(that.innerHTML) - 1);
+
+                    $(that).html(timeToSet);
+                    
                 }, 1000)
 
             })
@@ -300,20 +319,26 @@
                         '<h2 style="display:block; margin:auto; text-align:center;" class="time-text">' + formatTime(duration) + '</h2>' +
                     '</div>').insertBefore($(button).parent().find(".price-row"));
 
-                    $(button).parent().find(".time-text").each(function () {
+                    var time_text_div = $(button).parent().find(".time-text");
+
+                    time_text_div.each(function () {
 
                         var that = this;
 
                         var timer = setInterval(function () {
 
-                            var timeToSet = formatTime(getDuration(that.innerHTML) - 1);
 
-                            $(that).html(timeToSet);
-                            if (timeToSet == "00:00:00") {
+                            if (that.innerHTML == "00:00:00") {
 
                                 clearInterval(timer);
 
-                                var correct_button = $(button).parent().find(".bid-button");
+                                var correct_button = $(time_text_div).parent().parent().find(".bid-button");
+
+                                console.log("udjooo!");
+                                console.log("correct: ");
+                                console.log(correct_button);
+                                console.log("parent: ");
+                                console.log($(time_text_div).parent().parent());
 
                                 correct_button.removeClass('btn-danger').removeClass('btn-success').addClass('btn-info');
 
@@ -328,7 +353,13 @@
                                     correct_button.html("Sold!");
                                 }
 
+                                return;
                             }
+
+                            var timeToSet = formatTime(getDuration(that.innerHTML) - 1);
+
+                            $(that).html(timeToSet);
+                            
                         }, 1000)
 
                     });
@@ -362,31 +393,50 @@
             }
         }
 
+        var lastDateTime = new Date();
+
         $(function () {
             // Declare a proxy to reference the hub.
             var chat = $.connection.chatHub;
             // Create a function that the hub can call to broadcast messages.
             chat.client.broadcastMessage = function (name, message) {
 
-                if ($("#auction-" + message).find(".last_bidder").exists()) {
-                    $("#auction-" + message).find(".last_bidder").html(name);
+                msgs = message.split("#");
+
+                console.log("name: " + name);
+                console.log("msgs[0]: " + msgs[0]);
+                console.log("msgs[1]: " + msgs[1]);
+
+                var currDateTime = new Date(msgs[1]);
+
+                console.log("lastdatetime: " + lastDateTime);
+                console.log("currdatetime: " + currDateTime);
+
+                if (currDateTime < lastDateTime) {
+                    return;
+                }
+
+                lastDateTime = currDateTime;
+
+                if ($("#auction-" + msgs[0]).find(".last_bidder").exists()) {
+                    $("#auction-" + msgs[0]).find(".last_bidder").html(name);
                 }
                 else {
-                    $("#auction-" + message).find(".be_first_one").hide();
-                    $("#auction-" + message).find(".portfolio-inside").append('<div class="row" style="width:100%; margin-top:10px; margin-left:10px">' +
+                    $("#auction-" + msgs[0]).find(".be_first_one").hide();
+                    $("#auction-" + msgs[0]).find(".portfolio-inside").append('<div class="row" style="width:100%; margin-top:10px; margin-left:10px">' +
 
                                 '<h4 style="display:inline; margin-left:10px">Last bidder: </h4>' +
                                 '<h4 style="display:inline; margin-right:0px"><b class="last_bidder">' + name + '</h4></b>' +
                             '</div>');
                 }
 
-                console.log($("#auction-" + message).find(".current_price"));
-                console.log($("#auction-" + message).find(".current_price").html());
+                //console.log($("#auction-" + msgs[0]).find(".current_price"));
+                //console.log($("#auction-" + msgs[0]).find(".current_price").html());
 
-                var current_price = parseInt($("#auction-" + message).find(".current_price").html());
-                $("#auction-" + message).find(".current_price").html(current_price + 1);
+                var current_price = parseInt($("#auction-" + msgs[0]).find(".current_price").html());
+                $("#auction-" + msgs[0]).find(".current_price").html(current_price + 1);
 
-                refreshTime($("#auction-" + message));
+                refreshTime($("#auction-" + msgs[0]));
 
 
                 //// Html encode display name and message.
@@ -422,6 +472,8 @@
                         var d = new Date();
                         d.setDate(d.getDate() - 1);
                         if (new Date(result) < d) {
+                            $("#auction-" + auction_id).find(".interaction-button").html("Buy more tokens!");
+                            $("#auction-" + auction_id).find(".interaction-button").attr("disabled", true);
                             return;
                         }
                         console.log("finished ajax request! bid");
@@ -433,7 +485,7 @@
                         var tokens = parseInt($(".token_count").html());
                         $(".token_count").html(tokens - 1);
 
-                        chat.server.send(currentUserName, auction_id);
+                        chat.server.send(currentUserName, auction_id + "#" + result);
                     }
                 });
             }

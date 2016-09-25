@@ -73,6 +73,7 @@ textarea {
     align-items : center;
     background:rgba(255,255,255,0.4);
     height:425px;
+    font-family: "Lucida Console", Monaco, monospace;
 }
 
 .form-horizontal {
@@ -100,4 +101,26 @@ footer {
     font-size:20px; 
     margin:auto; 
     display:block;
+}
+
+.reg-form {
+    font-family:'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+}
+
+.helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.helper-img {
+    display: inline-block;
+    vertical-align: middle;
+    margin:auto;
+    margin-left:10px;
+}
+
+.time-text-wrapper {
+    margin:auto; 
+    width:100%;
 }

@@ -7,8 +7,7 @@
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
-    <div class="form-horizontal" >
-        <hr />
+    <div class="form-horizontal" style="width:400px; font-family:'Georgia', serif; font-size:15px; margin:auto" >
         <dl class="dl-horizontal">
             <div class="form-group">
                 <dt>Name:</dt>
@@ -45,8 +44,8 @@
                     <dt>See all orders</dt>
 
                 }*@
-            <div class="form-group">
-            <dt >@Html.ActionLink("Edit account info", "Edit", "Manage")</dt>
+            <div class="form-group" style="margin-left:100px;">
+            @Html.ActionLink("Edit account info", "Edit", "Manage", null, new { @class = "btn btn-warning" })
                 </div>
         </div>
                 @*<dt>External Logins:</dt>
