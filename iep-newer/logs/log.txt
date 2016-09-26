@@ -8059,3 +8059,57 @@ DEBUG 2016-09-25 23:55:52,230 1808464ms AuctionController      pdateAuctionClose
 DEBUG 2016-09-25 23:55:55,365 1811599ms AuctionController      Bid                - Auction Bid 34
 DEBUG 2016-09-25 23:55:55,676 1811911ms AuctionController      pdateAuctionClosed - Auction updateAuctionClosed for auction 2
 DEBUG 2016-09-25 23:55:58,606 1814841ms AuctionController      Bid                - Auction Bid 34
+DEBUG 2016-09-26 08:59:02,377 53457ms OrderController        Index              - Order Index msg  userid 96acfab5-d63d-4a61-901a-539f579b5d12
+DEBUG 2016-09-26 08:59:48,678 99758ms OrderController        Index              - Order Index msg  userid 96acfab5-d63d-4a61-901a-539f579b5d12
+DEBUG 2016-09-26 08:59:58,612 109692ms HomeController         Index              - Auction index
+DEBUG 2016-09-26 08:59:58,797 109877ms HomeController         CallSite.Target    - Auction index username opa
+DEBUG 2016-09-26 08:59:58,996 110076ms HomeController         Index              - Auction updating close status for auction subfocus
+DEBUG 2016-09-26 08:59:59,163 110243ms HomeController         Index              - Auction updating close status for auction still got a gto
+DEBUG 2016-09-26 08:59:59,165 110245ms HomeController         Index              - Auction updating close status for auction artificial
+DEBUG 2016-09-26 08:59:59,166 110246ms HomeController         Index              - Auction updating close status for auction put your hands
+DEBUG 2016-09-26 08:59:59,332 110412ms HomeController         Index              - Auction updating close status for auction welcome adminadmin
+DEBUG 2016-09-26 08:59:59,333 110413ms HomeController         Index              - Auction updating close status for auction supergrass
+DEBUG 2016-09-26 08:59:59,487 110567ms HomeController         Index              - Auction updating close status for auction disclosure
+DEBUG 2016-09-26 08:59:59,490 110570ms HomeController         Index              - Auction updating close status for auction freedon
+DEBUG 2016-09-26 08:59:59,652 110732ms HomeController         Index              - Auction updating close status for auction freddy
+DEBUG 2016-09-26 08:59:59,654 110734ms HomeController         Index              - Auction updating close status for auction rampage
+DEBUG 2016-09-26 08:59:59,655 110735ms HomeController         Index              - Auction updating close status for auction dnb
+DEBUG 2016-09-26 08:59:59,812 110892ms HomeController         Index              - Auction updating close status for auction need me
+DEBUG 2016-09-26 08:59:59,814 110894ms HomeController         Index              - Auction updating close status for auction blah
+DEBUG 2016-09-26 08:59:59,970 111050ms HomeController         Index              - Auction updating close status for auction shibrejna
+DEBUG 2016-09-26 08:59:59,974 111054ms HomeController         Index              - Auction updating close status for auction always
+DEBUG 2016-09-26 09:00:00,128 111208ms HomeController         Index              - Auction updating close status for auction in flames
+DEBUG 2016-09-26 09:00:00,129 111209ms HomeController         Index              - Auction updating close status for auction slipknot
+DEBUG 2016-09-26 09:00:00,130 111210ms HomeController         Index              - Auction updating close status for auction jester
+DEBUG 2016-09-26 09:00:00,317 111397ms HomeController         Index              - Auction updating close status for auction london
+DEBUG 2016-09-26 09:00:00,318 111398ms HomeController         Index              - Auction updating close status for auction citys beautiful
+DEBUG 2016-09-26 09:00:00,477 111557ms HomeController         Index              - Auction updating close status for auction elektricity
+DEBUG 2016-09-26 09:00:00,478 111558ms HomeController         Index              - Auction updating close status for auction gooo
+DEBUG 2016-09-26 09:00:00,481 111561ms HomeController         Index              - Auction updating close status for auction meeeh
+DEBUG 2016-09-26 09:00:00,636 111716ms HomeController         Index              - Auction updating close status for auction remember the future
+DEBUG 2016-09-26 09:00:00,640 111720ms HomeController         Index              - Auction updating close status for auction random
+DEBUG 2016-09-26 09:00:00,794 111874ms HomeController         Index              - Auction updating close status for auction ajdebevise
+DEBUG 2016-09-26 09:00:00,796 111876ms HomeController         Index              - Auction updating close status for auction keep on rocking me
+DEBUG 2016-09-26 09:00:00,797 111877ms HomeController         Index              - Auction updating close status for auction korn
+DEBUG 2016-09-26 09:00:00,959 112039ms HomeController         Index              - Auction updating close status for auction divine
+DEBUG 2016-09-26 09:00:00,960 112040ms HomeController         Index              - Auction updating close status for auction nesto
+DEBUG 2016-09-26 09:00:01,116 112196ms HomeController         Index              - Auction updating close status for auction mlatka
+DEBUG 2016-09-26 09:00:01,119 112199ms HomeController         Index              - Auction updating close status for auction miljan
+DEBUG 2016-09-26 09:00:01,312 112392ms HomeController         Index              - Auction updating close status for auction auction 1
+DEBUG 2016-09-26 09:00:01,321 112401ms HomeController         Index              - Auction updating close status for auction auction 2
+DEBUG 2016-09-26 09:00:02,814 113894ms HomeController         Index              - Auction updating close status for auction testing testing
+DEBUG 2016-09-26 09:00:04,127 115206ms HomeController         Index              - Auction updating close status for auction dimi
+DEBUG 2016-09-26 09:00:04,129 115208ms HomeController         Index              - Auction updating close status for auction test
+DEBUG 2016-09-26 09:00:04,316 115396ms HomeController         Index              - Auction updating close status for auction fatboy slim
+DEBUG 2016-09-26 09:00:04,318 115398ms HomeController         Index              - Auction updating close status for auction lucky boy
+DEBUG 2016-09-26 09:00:04,319 115399ms HomeController         Index              - Auction updating close status for auction lucky boy 2
+DEBUG 2016-09-26 09:00:04,484 115564ms HomeController         Index              - Auction updating close status for auction lucky boy 3 oh lucky boy
+DEBUG 2016-09-26 09:00:04,486 115566ms HomeController         Index              - Auction updating close status for auction random auction
+DEBUG 2016-09-26 09:00:04,643 115723ms HomeController         Index              - Auction updating close status for auction random auction 2
+DEBUG 2016-09-26 09:00:04,645 115725ms HomeController         Index              - Auction updating close status for auction time diff
+DEBUG 2016-09-26 09:00:05,923 117003ms HomeController         Index              - Auction updating close status for auction time diff instant
+DEBUG 2016-09-26 09:00:06,080 117160ms HomeController         Index              - Auction updating close status for auction auction pre
+DEBUG 2016-09-26 09:00:06,082 117162ms HomeController         Index              - Auction updating close status for auction auction post
+DEBUG 2016-09-26 09:00:07,365 118445ms HomeController         Index              - Auction updating close status for auction star wars
+DEBUG 2016-09-26 09:00:07,525 118605ms HomeController         Index              - Auction updating close status for auction starr
+DEBUG 2016-09-26 09:00:15,915 126995ms HomeController         Index              - Auction index page 

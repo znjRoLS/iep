@@ -293,7 +293,7 @@
 
                                 correct_button.removeClass('btn-danger').removeClass('btn-success').addClass('btn-info');
 
-                                if (!$(button).parent().find(".last-bidder").exists()) {
+                                if (!$(correct_button).parent().find(".last-bidder").exists()) {
                                     correct_button.html("Expired");
                                     correct_button.parent().find(".be_first_one").hide();
                                 }
